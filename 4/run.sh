@@ -2,9 +2,9 @@
 set -e
 set -x
 
-rm -f example.db
-python model.py
-sqlite3 example.db .schema
-sqlite3 example.db 'select * from user'
-sqlite3 example.db 'select * from topic'
-sqlite3 example.db 'select * from user_topic'
+rm -f topics.db
+python test.py
+sqlite3 topics.db .schema
+sqlite3 topics.db 'select * from user'
+sqlite3 topics.db 'select * from topic'
+sqlite3 topics.db 'select * from user_topic'

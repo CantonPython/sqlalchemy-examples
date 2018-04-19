@@ -1,20 +1,14 @@
-
 """
-SQLAlchemy example 2
+SQLAlchemy example
 
-Define a table using the sqlalchemy declarative ORM.
-Create another table.
+Define some tables using the sqlalchemy declarative ORM.
 Insert some data to the tables.
-
 """
-from __future__ import print_function
-import sys
-
 from sqlalchemy import create_engine
 from sqlalchemy import Column, String, Integer, DateTime
 from sqlalchemy.sql import func
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
 
@@ -35,24 +29,6 @@ class Topic(Base):
     def __init__(self, description):
         self.description = description
 
-engine = create_engine("sqlite:///example.db")
+engine = create_engine("sqlite:///topics.db")
 Base.metadata.create_all(engine)
-
-#
-# Example session.
-#
-
 Session = sessionmaker(bind=engine)
-session = Session()
-
-u1 = User("xyzzy")
-t1 = Topic("and now for something completely different")
-
-try:
-    session.add(u1)
-    session.add(t1)
-    session.commit()
-except Exception as e:
-    print("Failed:", e)
-    session.rollback()
-    sys.exit(1)

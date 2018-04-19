@@ -2,7 +2,7 @@
 set -e
 set -x
 
-python model.py
-sqlite3 example.db .schema
-sqlite3 example.db 'select * from user'
-sqlite3 example.db 'select * from topic'
+python test.py
+sqlite3 topics.db .schema
+sqlite3 topics.db 'select * from user'
+sqlite3 topics.db 'select * from topic'
