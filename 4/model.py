@@ -32,6 +32,9 @@ class User(Base):
     def __init__(self, username):
         self.username = username
 
+    def __repr__(self):
+        return "<User(id={self.id}, username='{self.username}')>".format(self=self)
+
 class Topic(Base):
     __tablename__ = "topic"
     id = Column(Integer, primary_key=True)
@@ -45,11 +48,18 @@ class Topic(Base):
     def __init__(self, description):
         self.description = description
 
+    def __repr__(self):
+        return "<Topic(id={self.id}, " \
+               "author_id={self.author_id}, " \
+               "votes={self.votes}, " \
+               "post_date='{self.post_date}', " \
+               "description='{self.description}')>".format(self=self)
+
     def upvote(self, user):
         if user not in self.voted:
             self.votes += 1
             self.voted.append(user)
 
-engine = create_engine("sqlite:///topics.db")
+engine = create_engine("sqlite:///topics.db", echo=False)
 Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
