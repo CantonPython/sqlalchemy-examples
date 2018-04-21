@@ -6,6 +6,7 @@ Insert some data to the tables.
 Create a 1-n relationship.
 Create an n-n relationship.
 """
+import hashlib
 from sqlalchemy import create_engine
 from sqlalchemy import Column, String, Integer, DateTime
 from sqlalchemy import ForeignKey, Table
@@ -13,6 +14,11 @@ from sqlalchemy.sql import func
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.exc import IntegrityError
+
+def hash(value):
+    md5 = hashlib.md5()
+    md5.update(value)
+    return md5.hexdigest()
 
 class UsernameTaken(Exception):
     pass
@@ -30,14 +36,21 @@ class User(Base):
     __tablename__ = "user"
     id = Column(Integer, primary_key=True)
     username = Column(String, unique=True)
+    email = Column(String)
+    passwd = Column(String)
     topics = relationship("Topic", back_populates="author")
     voted = relationship("Topic", back_populates="voted", secondary=vote_table)
 
-    def __init__(self, username):
+    def __init__(self, username, email='', passwd=''):
         self.username = username
+        self.email = email
+        self.passwd = hash(passwd)
 
     def __repr__(self):
-        return "<User(id={self.id}, username='{self.username}')>".format(self=self)
+        return "<User(id={self.id}, " \
+               "username='{self.username}', " \
+               "email='{self.email}', " \
+               "passwd='{self.passwd}')>".format(self=self)
 
     @classmethod
     def create(cls, session, username):
