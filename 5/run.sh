@@ -10,3 +10,5 @@ sqlite3 topics.db 'select * from topic'
 sqlite3 topics.db 'select * from user_topic'
 
 python test2.py
+python test3.py
+python test4.py

@@ -1,21 +1,26 @@
-#
-# sqlalchemy basic core examples
-#
-
 from __future__ import print_function
-from model import engine, vote_table
+from model import Session, User, Topic, UsernameTaken
 
-# Example basic usage of the core engine to execute raw sql. Application code
-# would normally use the ORM or sql expression language constructs.
-connection = engine.connect()
-result = connection.execute('select * from user_topic')
-for row in result:
-    print(row)
-connection.close()
+session = Session()
 
-# Same query, but with basic sql expression language constructs make it
-# more pythonic.
-select = vote_table.select()
-result = engine.execute(select)
-for row in result:
-    print(row)
+# Create a user.
+try:
+    user = User.create(session, "foobar")
+except UsernameTaken:
+    print("username is already taken")
+
+# Get a user by id.
+user = User.get_by_id(session, 1)
+print(user)
+
+# Create a new topic
+user = User.get_by_id(session, 1)
+topic = Topic.create(session, user, "albatross for sale")
+print(topic)
+
+# Upvote a topic
+user = User.get_by_id(session, 1)
+topic = Topic.get_by_id(session, 1)
+topic.upvote(session, user)
+print(topic)
+
