@@ -16,7 +16,7 @@ def query_by_id(id_):
     topic = session.query(Topic).filter_by(id=id_).one() # raises exc if not found
     print(topic)
     print("who voted:")
-    for user in topic.voted:
+    for user in topic.voted_by:
         print(user.username)
 
 def list_stuff():

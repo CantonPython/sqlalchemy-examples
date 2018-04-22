@@ -39,7 +39,7 @@ class User(Base):
     email = Column(String)
     passwd = Column(String)
     topics = relationship("Topic", back_populates="author")
-    voted = relationship("Topic", back_populates="voted", secondary=vote_table)
+    voted_on = relationship("Topic", back_populates="voted_by", secondary=vote_table)
 
     def __init__(self, username, email='', passwd=''):
         self.username = username
@@ -82,7 +82,7 @@ class Topic(Base):
     author_id = Column(Integer, ForeignKey("user.id"))
     author = relationship("User", back_populates="topics")
     votes = Column(Integer, default=0)
-    voted = relationship("User", back_populates="voted", secondary=vote_table)
+    voted_by = relationship("User", back_populates="voted_on", secondary=vote_table)
 
     def __init__(self, description):
         self.description = description
@@ -95,9 +95,9 @@ class Topic(Base):
                "description='{self.description}')>".format(self=self)
 
     def upvote(self, session, user):
-        if user not in self.voted:
+        if user not in self.voted_by:
             self.votes += 1
-            self.voted.append(user)
+            self.voted_by.append(user)
             session.commit()
 
     @classmethod
